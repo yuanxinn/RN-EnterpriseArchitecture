@@ -1,45 +1,48 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * AwesomeProject - 企业级 React Native 应用
  *
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import React from 'react';
+import { StatusBar, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+import { store, useAppSelector } from './src/store';
+import { selectThemeMode } from './src/store/slices';
+import { RootNavigator } from './src/navigation';
 
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
-
+/**
+ * 应用内容组件
+ */
 function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+  const themeMode = useAppSelector(selectThemeMode);
+  const systemColorScheme = useColorScheme();
+
+  // 确定当前主题
+  const isDarkMode =
+    themeMode === 'system' ? systemColorScheme === 'dark' : themeMode === 'dark';
 
   return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
+    <>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <RootNavigator />
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+/**
+ * 应用根组件
+ */
+function App() {
+  return (
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <AppContent />
+      </SafeAreaProvider>
+    </Provider>
+  );
+}
 
 export default App;
