@@ -6,11 +6,13 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, useColorScheme } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import { HomeScreen, SettingsScreen } from '../screens';
 import type { RootStackParamList, MainTabParamList } from '../types/navigation';
 import { colors } from '../constants/colors';
+import { selectThemeMode } from '../store/slices/appSlice';
 
 /**
  * 底部标签导航器
@@ -33,21 +35,32 @@ const TabIcon = ({ name, color }: { name: string; color: string }) => (
  * 主标签导航器
  */
 function MainTabNavigator() {
+  const systemColorScheme = useColorScheme();
+  const themeMode = useSelector(selectThemeMode);
+  const isDarkMode =
+    themeMode === 'system' ? systemColorScheme === 'dark' : themeMode === 'dark';
+
+  const tabBarBackground = isDarkMode ? colors.gray[900] : colors.white;
+  const tabBarActiveColor = colors.primary;
+  const tabBarInactiveColor = isDarkMode ? colors.gray[400] : colors.gray[500];
+  const headerBackground = isDarkMode ? colors.gray[900] : colors.white;
+  const headerTintColor = isDarkMode ? colors.gray[100] : colors.text.primary;
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: colors.white,
+          backgroundColor: headerBackground,
         },
-        headerTintColor: colors.text.primary,
+        headerTintColor: headerTintColor,
         headerTitleStyle: {
           fontWeight: '600',
         },
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.gray[500],
+        tabBarActiveTintColor: tabBarActiveColor,
+        tabBarInactiveTintColor: tabBarInactiveColor,
         tabBarStyle: {
-          backgroundColor: colors.white,
-          borderTopColor: colors.border.light,
+          backgroundColor: tabBarBackground,
+          borderTopColor: isDarkMode ? colors.gray[700] : colors.border.light,
         },
       }}>
       <Tab.Screen

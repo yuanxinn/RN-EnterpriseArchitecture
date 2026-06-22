@@ -22,68 +22,88 @@ export default function HomeScreen() {
   const dispatch = useAppDispatch();
   const themeMode = useAppSelector(selectThemeMode);
   const systemColorScheme = useColorScheme();
-  const isDarkMode = systemColorScheme === 'dark';
+
+  // 根据 Redux 主题模式确定是否深色
+  const isDarkMode =
+    themeMode === 'system' ? systemColorScheme === 'dark' : themeMode === 'dark';
 
   const handleToggleTheme = () => {
     const newTheme = themeMode === 'light' ? 'dark' : 'light';
     dispatch(setThemeMode(newTheme));
   };
 
+  // 动态样式 - 根据主题切换颜色
+  const themeColors = {
+    background: isDarkMode ? colors.gray[900] : colors.background.secondary,
+    card: isDarkMode ? colors.gray[800] : colors.white,
+    cardTitle: isDarkMode ? colors.gray[50] : colors.text.primary,
+    cardDescription: isDarkMode ? colors.gray[300] : colors.text.secondary,
+    textPrimary: isDarkMode ? colors.gray[100] : colors.text.primary,
+    textSecondary: isDarkMode ? colors.gray[400] : colors.text.secondary,
+    border: isDarkMode ? colors.gray[700] : colors.border.light,
+    button: isDarkMode ? colors.primaryDark : colors.primary,
+    infoValue: isDarkMode ? colors.gray[100] : colors.text.primary,
+    tabActive: isDarkMode ? colors.primaryLight : colors.primary,
+    tabInactive: isDarkMode ? colors.gray[500] : colors.gray[500],
+    tabBarBg: isDarkMode ? colors.gray[900] : colors.white,
+    tabBarBorder: isDarkMode ? colors.gray[700] : colors.border.light,
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <Text style={styles.title}>欢迎使用 AwesomeProject</Text>
-          <Text style={styles.subtitle}>企业级 React Native 架构</Text>
+          <Text style={[styles.title, { color: themeColors.textPrimary }]}>欢迎使用 AwesomeProject</Text>
+          <Text style={[styles.subtitle, { color: themeColors.textSecondary }]}>企业级 React Native 架构</Text>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>架构特性</Text>
+        <View style={[styles.card, { backgroundColor: themeColors.card }]}>
+          <Text style={[styles.cardTitle, { color: themeColors.cardTitle }]}>架构特性</Text>
           <View style={styles.featureList}>
             <View style={styles.featureItem}>
               <Text style={styles.featureIcon}>✓</Text>
-              <Text style={styles.featureText}>Redux Toolkit 状态管理</Text>
+              <Text style={[styles.featureText, { color: themeColors.textPrimary }]}>Redux Toolkit 状态管理</Text>
             </View>
             <View style={styles.featureItem}>
               <Text style={styles.featureIcon}>✓</Text>
-              <Text style={styles.featureText}>React Navigation 导航系统</Text>
+              <Text style={[styles.featureText, { color: themeColors.textPrimary }]}>React Navigation 导航系统</Text>
             </View>
             <View style={styles.featureItem}>
               <Text style={styles.featureIcon}>✓</Text>
-              <Text style={styles.featureText}>TypeScript 类型安全</Text>
+              <Text style={[styles.featureText, { color: themeColors.textPrimary }]}>TypeScript 类型安全</Text>
             </View>
             <View style={styles.featureItem}>
               <Text style={styles.featureIcon}>✓</Text>
-              <Text style={styles.featureText}>模块化目录结构</Text>
+              <Text style={[styles.featureText, { color: themeColors.textPrimary }]}>模块化目录结构</Text>
             </View>
             <View style={styles.featureItem}>
               <Text style={styles.featureIcon}>✓</Text>
-              <Text style={styles.featureText}>API 服务层封装</Text>
+              <Text style={[styles.featureText, { color: themeColors.textPrimary }]}>API 服务层封装</Text>
             </View>
           </View>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>主题切换</Text>
-          <Text style={styles.cardDescription}>
+        <View style={[styles.card, { backgroundColor: themeColors.card }]}>
+          <Text style={[styles.cardTitle, { color: themeColors.cardTitle }]}>主题切换</Text>
+          <Text style={[styles.cardDescription, { color: themeColors.cardDescription }]}>
             当前主题：{themeMode === 'system' ? '跟随系统' : themeMode === 'light' ? '浅色' : '深色'}
           </Text>
-          <TouchableOpacity style={styles.button} onPress={handleToggleTheme}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: themeColors.button }]} onPress={handleToggleTheme}>
             <Text style={styles.buttonText}>切换主题</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>系统信息</Text>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>系统配色方案</Text>
-            <Text style={styles.infoValue}>{isDarkMode ? '深色' : '浅色'}</Text>
+        <View style={[styles.card, { backgroundColor: themeColors.card }]}>
+          <Text style={[styles.cardTitle, { color: themeColors.cardTitle }]}>系统信息</Text>
+          <View style={[styles.infoRow, { borderBottomColor: themeColors.border }]}>
+            <Text style={[styles.infoLabel, { color: themeColors.textSecondary }]}>系统配色方案</Text>
+            <Text style={[styles.infoValue, { color: themeColors.infoValue }]}>{isDarkMode ? '深色' : '浅色'}</Text>
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Redux DevTools</Text>
-            <Text style={styles.infoValue}>已启用</Text>
+          <View style={[styles.infoRow, { borderBottomColor: themeColors.border }]}>
+            <Text style={[styles.infoLabel, { color: themeColors.textSecondary }]}>Redux DevTools</Text>
+            <Text style={[styles.infoValue, { color: themeColors.infoValue }]}>已启用</Text>
           </View>
         </View>
       </ScrollView>

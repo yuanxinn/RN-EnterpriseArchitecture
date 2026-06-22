@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Switch,
   Alert,
+  useColorScheme,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -28,6 +29,27 @@ export default function SettingsScreen() {
   const dispatch = useAppDispatch();
   const themeMode = useAppSelector(selectThemeMode);
   const isConnected = useAppSelector(selectIsConnected);
+  const systemColorScheme = useColorScheme();
+
+  const isDarkMode =
+    themeMode === 'system' ? systemColorScheme === 'dark' : themeMode === 'dark';
+
+  const themeColors = {
+    background: isDarkMode ? colors.gray[900] : colors.background.secondary,
+    card: isDarkMode ? colors.gray[800] : colors.white,
+    sectionTitle: isDarkMode ? colors.gray[50] : colors.text.primary,
+    settingLabel: isDarkMode ? colors.gray[100] : colors.text.primary,
+    settingDesc: isDarkMode ? colors.gray[400] : colors.text.secondary,
+    border: isDarkMode ? colors.gray[700] : colors.border.light,
+    menuLabel: isDarkMode ? colors.gray[100] : colors.text.primary,
+    menuArrow: isDarkMode ? colors.gray[400] : colors.text.secondary,
+    menuDivider: isDarkMode ? colors.gray[700] : colors.border.light,
+    footerText: isDarkMode ? colors.gray[500] : colors.text.secondary,
+    themeBtn: isDarkMode ? colors.gray[700] : colors.gray[100],
+    themeBtnActive: isDarkMode ? colors.primaryDark : colors.primary,
+    themeBtnText: isDarkMode ? colors.gray[200] : colors.text.secondary,
+    themeBtnTextActive: colors.white,
+  };
 
   const handleResetApp = () => {
     Alert.alert(
@@ -58,17 +80,17 @@ export default function SettingsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: themeColors.background }]}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>外观设置</Text>
+        <View style={[styles.section, { backgroundColor: themeColors.card }]}>
+          <Text style={[styles.sectionTitle, { color: themeColors.sectionTitle }]}>外观设置</Text>
 
-          <View style={styles.settingItem}>
+          <View style={[styles.settingItem, { borderBottomColor: themeColors.border }]}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>主题模式</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, { color: themeColors.settingLabel }]}>主题模式</Text>
+              <Text style={[styles.settingDescription, { color: themeColors.settingDesc }]}>
                 {themeMode === 'light'
                   ? '浅色模式'
                   : themeMode === 'dark'
@@ -82,13 +104,15 @@ export default function SettingsScreen() {
                   key={mode}
                   style={[
                     styles.themeButton,
-                    themeMode === mode && styles.themeButtonActive,
+                    { backgroundColor: themeColors.themeBtn },
+                    themeMode === mode && { backgroundColor: themeColors.themeBtnActive },
                   ]}
                   onPress={() => dispatch(setThemeMode(mode))}>
                   <Text
                     style={[
                       styles.themeButtonText,
-                      themeMode === mode && styles.themeButtonTextActive,
+                      { color: themeColors.themeBtnText },
+                      themeMode === mode && { color: themeColors.themeBtnTextActive },
                     ]}>
                     {mode === 'light' ? '浅色' : mode === 'dark' ? '深色' : '系统'}
                   </Text>
@@ -98,13 +122,13 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>应用状态</Text>
+        <View style={[styles.section, { backgroundColor: themeColors.card }]}>
+          <Text style={[styles.sectionTitle, { color: themeColors.sectionTitle }]}>应用状态</Text>
 
-          <View style={styles.settingItem}>
+          <View style={[styles.settingItem, { borderBottomColor: themeColors.border }]}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>网络状态</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, { color: themeColors.settingLabel }]}>网络状态</Text>
+              <Text style={[styles.settingDescription, { color: themeColors.settingDesc }]}>
                 {isConnected ? '已连接' : '未连接'}
               </Text>
             </View>
@@ -117,10 +141,10 @@ export default function SettingsScreen() {
             </View>
           </View>
 
-          <View style={styles.settingItem}>
+          <View style={[styles.settingItem, { borderBottomColor: themeColors.border }]}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Redux Store</Text>
-              <Text style={styles.settingDescription}>状态管理正常运行</Text>
+              <Text style={[styles.settingLabel, { color: themeColors.settingLabel }]}>Redux Store</Text>
+              <Text style={[styles.settingDescription, { color: themeColors.settingDesc }]}>状态管理正常运行</Text>
             </View>
             <View style={[styles.statusBadge, styles.statusConnected]}>
               <Text style={styles.statusText}>正常</Text>
@@ -128,23 +152,23 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>其他</Text>
+        <View style={[styles.section, { backgroundColor: themeColors.card }]}>
+          <Text style={[styles.sectionTitle, { color: themeColors.sectionTitle }]}>其他</Text>
 
-          <TouchableOpacity style={styles.menuItem} onPress={handleAbout}>
-            <Text style={styles.menuLabel}>关于应用</Text>
-            <Text style={styles.menuArrow}>›</Text>
+          <TouchableOpacity style={[styles.menuItem, { borderBottomColor: themeColors.menuDivider }]} onPress={handleAbout}>
+            <Text style={[styles.menuLabel, { color: themeColors.menuLabel }]}>关于应用</Text>
+            <Text style={[styles.menuArrow, { color: themeColors.menuArrow }]}>›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem} onPress={handleResetApp}>
-            <Text style={[styles.menuLabel, styles.menuLabelDanger]}>重置应用</Text>
-            <Text style={styles.menuArrow}>›</Text>
+          <TouchableOpacity style={[styles.menuItem, { borderBottomColor: themeColors.menuDivider }]} onPress={handleResetApp}>
+            <Text style={[styles.menuLabel, { color: themeColors.menuLabel }, styles.menuLabelDanger]}>重置应用</Text>
+            <Text style={[styles.menuArrow, { color: themeColors.menuArrow }]}>›</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>AwesomeProject v0.0.1</Text>
-          <Text style={styles.footerText}>React Native 0.86.0</Text>
+          <Text style={[styles.footerText, { color: themeColors.footerText }]}>AwesomeProject v0.0.1</Text>
+          <Text style={[styles.footerText, { color: themeColors.footerText }]}>React Native 0.86.0</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -154,13 +178,11 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background.secondary,
   },
   scrollContent: {
     padding: spacing.lg,
   },
   section: {
-    backgroundColor: colors.white,
     borderRadius: 12,
     padding: spacing.lg,
     marginBottom: spacing.md,
@@ -176,7 +198,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: fontSize.lg,
     fontWeight: '600',
-    color: colors.text.primary,
     marginBottom: spacing.md,
   },
   settingItem: {
@@ -185,19 +206,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border.light,
   },
   settingInfo: {
     flex: 1,
   },
   settingLabel: {
     fontSize: fontSize.base,
-    color: colors.text.primary,
     marginBottom: spacing.xs,
   },
   settingDescription: {
     fontSize: fontSize.sm,
-    color: colors.text.secondary,
   },
   themeButtons: {
     flexDirection: 'row',
@@ -207,18 +225,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: 8,
-    backgroundColor: colors.gray[100],
-  },
-  themeButtonActive: {
-    backgroundColor: colors.primary,
   },
   themeButtonText: {
     fontSize: fontSize.sm,
-    color: colors.text.secondary,
     fontWeight: '500',
-  },
-  themeButtonTextActive: {
-    color: colors.white,
   },
   statusBadge: {
     paddingHorizontal: spacing.md,
@@ -241,18 +251,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border.light,
   },
   menuLabel: {
     fontSize: fontSize.base,
-    color: colors.text.primary,
   },
   menuLabelDanger: {
     color: colors.error,
   },
   menuArrow: {
     fontSize: fontSize.xl,
-    color: colors.text.secondary,
   },
   footer: {
     marginTop: spacing.xl,
@@ -260,7 +267,6 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: fontSize.sm,
-    color: colors.text.secondary,
     marginBottom: spacing.xs,
   },
 });
